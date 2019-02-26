@@ -1,2 +1,2 @@
 # radiological-imaging-captioning
-captioning medical radiological images
+captioning chest x-ray images with deep reinforcement learning
