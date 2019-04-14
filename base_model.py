@@ -16,8 +16,8 @@ class BaseModel(object):
         self.config = config
         self.is_train = True if config.phase == 'train' else False
         self.train_cnn = self.is_train and config.train_cnn
-        self.image_loader = ImageLoader('./utils/ilsvrc_2012_mean.npy')
-        self.image_shape = [224, 224, 3]
+        self.image_loader = ImageLoader('./utils/ilsvrc_2012_mean.npy')#gets mean_file as input
+        self.image_shape = [240, 320, 3]
         self.nn = NN(config)
         self.global_step = tf.Variable(0,
                                        name = 'global_step',
@@ -28,7 +28,7 @@ class BaseModel(object):
         raise NotImplementedError()
 
     def train(self, sess, train_data):
-        """ Train the model using the COCO train2014 data. """
+        """ Train the model. """
         print("Training the model...")
         config = self.config
 
@@ -59,7 +59,7 @@ class BaseModel(object):
         print("Training complete.")
 
     def eval(self, sess, eval_gt_coco, eval_data, vocabulary):
-        """ Evaluate the model using the COCO val2014 data. """
+        """ Evaluate the model. """
         print("Evaluating the model ...")
         config = self.config
 
@@ -99,11 +99,6 @@ class BaseModel(object):
         json.dump(results, fp)
         fp.close()
 
-        # Evaluate these captions
-        eval_result_coco = eval_gt_coco.loadRes(config.eval_result_file)
-        scorer = COCOEvalCap(eval_gt_coco, eval_result_coco)
-        scorer.evaluate()
-        print("Evaluation complete.")
 
     def test(self, sess, test_data, vocabulary):
         """ Test the model using any given images. """
