@@ -16,7 +16,7 @@ class BaseModel(object):
         self.config = config
         self.is_train = True if config.phase == 'train' else False
         self.train_cnn = self.is_train and config.train_cnn
-        self.image_loader = ImageLoader('./utils/ilsvrc_2012_mean.npy')#gets mean_file as input
+        self.image_loader = ImageLoader('./utils/ricaption.npy')#gets mean_file as input
         self.image_shape = [240, 320, 3]
         self.nn = NN(config)
         self.global_step = tf.Variable(0,
