@@ -50,8 +50,8 @@ class Config(object):
 
         # about the training
         self.train_image_dir = './MontgomerySet/TRAIN/'
-        self.train_caption_file = './MontgomerySet/TRAIN/captions_train2014.json'
-        self.temp_annotation_file = './MontgomerySet/TRAIN/anns.csv'
+        self.train_caption_file = './MontgomerySet/Captions.csv'
+        self.temp_annotation_file = './MontgomerySet/Captions.csv'
         self.temp_data_file = './MontgomerySet/TRAIN/data.npy'
 
 

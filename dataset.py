@@ -5,6 +5,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from utils.vocabulary import Vocabulary
+from utils.coco.coco import COCO
 
 class DataSet(object):
     def __init__(self,
@@ -71,26 +72,26 @@ class DataSet(object):
 
 def prepare_train_data(config):
     """ Prepare the data for training the model. """
-    c
 
     print("Building the vocabulary...")
     vocabulary = Vocabulary(config.vocabulary_size)
+    c =COCO()
     if not os.path.exists(config.vocabulary_file):
-        vocabulary.build(coco.all_captions())
+        vocabulary.build(c.all_captions())
         vocabulary.save(config.vocabulary_file)
     else:
         vocabulary.load(config.vocabulary_file)
     print("Vocabulary built.")
     print("Number of words = %d" %(vocabulary.size))
 
-    coco.filter_by_words(set(vocabulary.words))
+    COCO.filter_by_words(set(vocabulary.words))
 
     print("Processing the captions...")
     if not os.path.exists(config.temp_annotation_file):
-        captions = [coco.anns[ann_id]['caption'] for ann_id in coco.anns]
-        image_ids = [coco.anns[ann_id]['image_id'] for ann_id in coco.anns]
+        captions = [COCO.anns[ann_id]['caption'] for ann_id in COCO.anns]
+        image_ids = [COCO.anns[ann_id]['image_id'] for ann_id in COCO.anns]
         image_files = [os.path.join(config.train_image_dir,
-                                    coco.imgs[image_id]['file_name'])
+                                    COCO.imgs[image_id]['file_name'])
                                     for image_id in image_ids]
         annotations = pd.DataFrame({'image_id': image_ids,
                                     'image_file': image_files,
@@ -140,9 +141,9 @@ def prepare_train_data(config):
 def prepare_eval_data(config):
     """ Prepare the data for evaluating the model. """
     coco = COCO(config.eval_caption_file)
-    image_ids = list(coco.imgs.keys())
+    image_ids = list(COCO.imgs.keys())
     image_files = [os.path.join(config.eval_image_dir,
-                                coco.imgs[image_id]['file_name'])
+                                COCO.imgs[image_id]['file_name'])
                                 for image_id in image_ids]
 
     print("Building the vocabulary...")
@@ -157,7 +158,7 @@ def prepare_eval_data(config):
     print("Building the dataset...")
     dataset = DataSet(image_ids, image_files, config.batch_size)
     print("Dataset built.")
-    return coco, dataset, vocabulary
+    return COCO, dataset, vocabulary
 
 def prepare_test_data(config):
     """ Prepare the data for testing the model. """
@@ -186,6 +187,6 @@ def build_vocabulary(config):
     coco.filter_by_cap_len(config.max_caption_length)
 
     vocabulary = Vocabulary(config.vocabulary_size)
-    vocabulary.build(coco.all_captions())
+    vocabulary.build(COCO.all_captions())
     vocabulary.save(config.vocabulary_file)
     return vocabulary

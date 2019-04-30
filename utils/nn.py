@@ -85,7 +85,7 @@ class NN(object):
     def dense(self,
               inputs,
               units,
-              activation = tf.softmax,
+              activation = tf.nn.softmax,
               use_bias = True,
               name = None):
         """ Fully-connected layer. """
